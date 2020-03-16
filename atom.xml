@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://babypuma.github.io</id>
     <title>Gridea</title>
-    <updated>2020-03-16T18:06:43.172Z</updated>
+    <updated>2020-03-16T18:07:05.092Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://babypuma.github.io"/>
     <link rel="self" href="https://babypuma.github.io/atom.xml"/>
@@ -10,6 +10,38 @@
     <logo>https://babypuma.github.io/images/avatar.png</logo>
     <icon>https://babypuma.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, Gridea</rights>
+    <entry>
+        <title type="html"><![CDATA[浅谈种群计数算法]]></title>
+        <id>https://babypuma.github.io/post/qian-tan-chong-qun-ji-shu-suan-fa/</id>
+        <link href="https://babypuma.github.io/post/qian-tan-chong-qun-ji-shu-suan-fa/">
+        </link>
+        <updated>2020-03-16T15:18:21.000Z</updated>
+        <content type="html"><![CDATA[<pre><code>  种群计数是指统计单位计算机字长内为1的bit数目。种群计数是一种应用广泛的算法，
+</code></pre>
+<p>例如，Redis用来计算字符串中设置为1的bit数的BITCOUNT命令，广告索引服务中快速<br>
+计算当前可投放的广告数。<br>
+学过C语言位操作符后，稍加思考就可以写出简单的实现方法：<br>
+pop = 0;<br>
+for (int i = 0; i &lt; 32; i++) {<br>
+if (x &amp; 1) {<br>
+pop = pop + 1;<br>
+}<br>
+x = x &gt;&gt; 1;<br>
+}<br>
+计算机科学中一个重要思想是以空间换时间，可以预先定义一个Byte表示的256个数字的<br>
+种群计数值，然后每个32位的数查表4次做累加可以计算出结果：<br>
+statis const int table[256] = {0, 1, 1, 2, 1, 2, ...,  7, 7, 8};<br>
+pop = table[x &amp; 0xFF] + table[(x &gt;&gt; 8) &amp; 0xFF] + ... + table[x &gt;&gt; 24];<br>
+更好的方法是使用分治法的思想，第一行计算两个相邻bit的种群计数值后原地保存，<br>
+第二行归并相邻的两个2 bit组种群计数值，分组的bit位数依次增大一倍，最后一行归并两个<br>
+16bit组的种群计数值保存在低16bit：<br>
+x = (x &amp; 0x55555555) + ((x &gt;&gt; 1) &amp; 0x55555555);<br>
+x = (x &amp; 0x33333333) + ((x &gt;&gt; 2) &amp; 0x33333333);<br>
+x = (x &amp; 0x0F0F0F0F) + ((x &gt;&gt; 4) &amp; 0x0F0F0F0F);<br>
+x = (x &amp; 0x00FF00FF) + ((x &gt;&gt; 8) &amp; 0x00FF00FF);<br>
+x = (x &amp; 0x0000FFFF) + ((x &gt;&gt; 16) &amp; 0x0000FFFF);</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Hello Gridea]]></title>
         <id>https://babypuma.github.io/post/hello-gridea/</id>
